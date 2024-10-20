@@ -1,0 +1,70 @@
+  {% load static %}
+
+  <!--   Core JS Files   -->
+  <script src="{% static 'js/core/popper.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/core/bootstrap.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/plugins/perfect-scrollbar.min.js' %}"></script>
+  <!--  Plugin for Parallax, full documentation here: https://github.com/wagerfield/parallax  -->
+  <script src="{% static 'js/plugins/parallax.min.js' %}"></script>
+  <!-- Control Center for Material UI Kit: parallax effects, scripts for the example pages etc -->
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
+  <script src="{% static 'js/material-kit.min.js' %}" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.58/darkreader.min.js"></script>
+
+  <script>
+  // Ensure DarkReader is loaded
+if (typeof DarkReader === 'undefined') {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/darkreader@4.9.58/darkreader.min.js';
+  document.head.appendChild(script);
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  
+  function updateTheme(isDark) {
+    if (isDark) {
+      themeIcon.textContent = 'light_mode';
+      themeIcon.classList.remove('text-secondary');
+    } else {
+      themeIcon.textContent = 'dark_mode';
+      themeIcon.classList.add('text-secondary');
+    }
+    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+    if (isDark) {
+      DarkReader.enable();
+    } else {
+      DarkReader.disable();
+    }
+  }
+
+  // Check for saved dark mode preference
+  const savedTheme = localStorage.getItem('darkMode');
+  if (savedTheme === 'enabled') {
+    updateTheme(true);
+  } else if (savedTheme === null) {
+    // If no preference is saved, use system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      updateTheme(true);
+    } else {
+      updateTheme(false);
+    }
+  } else {
+    updateTheme(false);
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const isDark = themeIcon.textContent === 'light_mode';
+    updateTheme(!isDark);
+  });
+
+  // Listen for system theme changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      updateTheme(e.matches);
+    });
+  }
+});
+    </script>

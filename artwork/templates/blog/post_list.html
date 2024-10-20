@@ -1,0 +1,64 @@
+{% extends 'layouts/base_background.html' %}
+{% load static %}
+
+{% block title %} Artwork - Blog Posts {% endblock title %}
+
+{% block body %} class="blog-page bg-gray-200" {% endblock body %}
+
+{% block content %}
+
+<header class="header-2">
+  <div class="page-header min-vh-75 relative" style="background-image: url('{% static 'img/post-bg.jpg' %}')">
+    <span class="mask bg-gradient-secondary opacity-2"></span>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-7 text-center mx-auto">
+          <h1 class="text-white pt-3 mt-n5">Fitness Blog Posts</h1>
+          <p class="lead text-white mt-3">Explore our latest fitness tips, workouts, and inspiration.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
+  <section class="py-5">
+    <div class="container">
+      <div class="row gy-5">
+        {% for post in posts %}
+          <div class="col-lg-4 col-md-6">
+            <div class="card h-100">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <a class="d-block blur-shadow-image" href="{% url 'post-detail' post.id %}">
+                  {% if post.thumbnail %}
+                    <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="img-fluid border-radius-lg">
+                  {% else %}
+                    <img src="{% static 'img/placeholder-image.jpg' %}" alt="Post thumbnail" class="img-fluid border-radius-lg">
+                  {% endif %}
+                </a>
+              </div>
+              <div class="card-body d-flex flex-column"> 
+                <h5 class="font-weight-bold mt-3"><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h5>
+                <p class="mb-4 flex-grow-1">{{ post.description|truncatewords:20 }}</p>
+                <div class="d-flex align-items-center justify-content-between mt-auto">
+                  <a href="{% url 'post-detail' post.id %}" class="btn btn-primary btn-sm mb-0">Read More</a>
+                  <p class="mb-0"><i class="material-icons text-sm me-1">schedule</i>{{ post.created_at|date:"F d, Y" }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12 text-center">
+            <p>No posts available at the moment.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+  <!-- Add any necessary JavaScript -->
+{% endblock javascripts %}
