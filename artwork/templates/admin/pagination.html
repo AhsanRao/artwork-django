@@ -1,5 +1,4 @@
 {% load i18n artwork %}
-
 {% if cl.paginator.num_pages > 1 %}
     <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
         <nav aria-label="Page navigation example">
@@ -14,9 +13,7 @@
                 {% if pagination_required %}
                     {{ request.get_full_path }}
                     {% for i in page_range %}
-                        <li class="page-item {% if i == cl.page_num %}active{% endif %}">
-                            {% paginator_number cl i %}
-                        </li>
+                        <li class="page-item {% if i == cl.page_num %}active{% endif %}">{% paginator_number cl i %}</li>
                     {% endfor %}
                 {% endif %}
                 <li class="page-item">
@@ -42,7 +39,6 @@
             {% endif %}
             out of <b>{{ cl.result_count }}</b> entries
         </div>
-
         {% if cl.formset and cl.result_count %}
             <input type="submit" name="_save" class="default" value="{% trans 'Save' %}">
         {% endif %}

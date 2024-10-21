@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('artwork', '0002_post_thumbnail_alter_post_created_at'),
+        ("artwork", "0002_post_thumbnail_alter_post_created_at"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='qr_code',
-            field=models.ImageField(blank=True, null=True, upload_to='post_qr_codes/'),
+            model_name="post",
+            name="qr_code",
+            field=models.ImageField(blank=True, null=True, upload_to="post_qr_codes/"),
         ),
     ]

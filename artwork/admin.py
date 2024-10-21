@@ -6,6 +6,7 @@ from .models import Post
 
 User = get_user_model()
 
+
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("username", "password")}),
@@ -25,9 +26,17 @@ class CustomUserAdmin(UserAdmin):
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
         (_("Trainer"), {"fields": ("is_trainer",)}),
     )
-    list_display = ("username", "email", "first_name", "last_name", "is_staff", "is_trainer")
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "is_trainer",
+    )
     list_filter = ("is_staff", "is_superuser", "is_active", "groups", "is_trainer")
     search_fields = ("username", "first_name", "last_name", "email")
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Post)
