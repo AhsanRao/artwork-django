@@ -235,3 +235,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+os.makedirs(os.path.join(MEDIA_ROOT, 'post_videos'), exist_ok=True)
+os.makedirs(os.path.join(MEDIA_ROOT, 'post_thumbnails'), exist_ok=True)
+os.makedirs(os.path.join(MEDIA_ROOT, 'post_qr_codes'), exist_ok=True)
