@@ -50,17 +50,19 @@ class Post(models.Model):
         )
 
         try:
-            (
-                ffmpeg.input(input_file, ss="00:00:01")
-                .filter("scale", 480, -1)
-                .output(output_file, vframes=1)
-                .overwrite_output()
-                .run(capture_stdout=True, capture_stderr=True)
-            )
+            # Create a stream first
+            stream = ffmpeg.input(input_file, ss="00:00:01")
+            stream = ffmpeg.filter(stream, "scale", 480, -1)
+            stream = ffmpeg.output(stream, output_file, vframes=1)
+            
+            # Run the ffmpeg command
+            ffmpeg.run(stream, overwrite_output=True, capture_stdout=True, capture_stderr=True)
 
+            # Save the thumbnail
             with open(output_file, "rb") as f:
-                self.thumbnail.save(f"thumbnail_{self.pk}.jpg", File(f), save=False)  # type: ignore
+                self.thumbnail.save(f"thumbnail_{self.pk}.jpg", File(f), save=False)
 
+            # Clean up
             os.remove(output_file)
         except ffmpeg.Error as e:
             print(f"Error generating thumbnail: {e.stderr.decode()}")
