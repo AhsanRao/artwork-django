@@ -1,56 +1,52 @@
 {% load static %}
-
 <!-- -------- START FOOTER 5 w/ DARK BACKGROUND ------- -->
 <footer class="footer py-5">
-  <div class="container z-index-1 position-relative">
-    <div class="row">
-      <div class="col-lg-4 me-auto mb-lg-0 mb-4 text-lg-start text-center">
-        <img src="{% static '/img/logos/logo-c.png' %}" alt="Artwork" class="mb-3" style="height: 40px;">
-        <h6 class="text-dark font-weight-bolder text-uppercase mb-lg-4 mb-3">Artwork</h6>
-        <ul class="nav flex-row ms-n3 justify-content-lg-start justify-content-center mb-4 mt-sm-0">
-          <li class="nav-item">
-            <a class="nav-link text-dark opacity-8" href="{% url 'index' %}">
-              Home
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark opacity-8" href="{% url 'about-us' %}">
-              About
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark opacity-8" href="{% url 'contact-us' %}">
-              Contact
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark opacity-8" href="{% url 'post-list' %}">
-              Posts
-            </a>
-          </li>
-        </ul>
-        <p class="text-sm text-dark opacity-8 mb-0">
-          &copy; {% now "Y" %} Artwork. All rights reserved.
-        </p>
-      </div>
-      <div class="col-lg-6 ms-auto text-lg-end text-center">
-        <p class="mb-5 text-lg text-dark font-weight-bold">
-          Discover, Learn, and Grow with Artwork
-        </p>
-        <a href="javascript:;" target="_blank" class="text-dark me-xl-4 me-4 opacity-5">
-          <span class="fab fa-facebook"></span>
-        </a>
-        <a href="javascript:;" target="_blank" class="text-dark me-xl-4 me-4 opacity-5">
-          <span class="fab fa-twitter"></span>
-        </a>
-        <a href="javascript:;" target="_blank" class="text-dark me-xl-4 me-4 opacity-5">
-          <span class="fab fa-instagram"></span>
-        </a>
-        <a href="javascript:;" target="_blank" class="text-dark opacity-5">
-          <span class="fab fa-linkedin"></span>
-        </a>
-      </div>
+    <div class="container z-index-1 position-relative">
+        <div class="row">
+            <div class="col-lg-4 me-auto mb-lg-0 mb-4 text-lg-start text-center">
+                <img src="{% static '/img/logos/logo-c.png' %}"
+                     alt="Artwork"
+                     class="mb-3"
+                     style="height: 40px">
+                <h6 class="text-dark font-weight-bolder text-uppercase mb-lg-4 mb-3">Artwork</h6>
+                <ul class="nav flex-row ms-n3 justify-content-lg-start justify-content-center mb-4 mt-sm-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark opacity-8" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark opacity-8" href="{% url 'about-us' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark opacity-8" href="{% url 'contact-us' %}">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark opacity-8" href="{% url 'post-list' %}">Posts</a>
+                    </li>
+                </ul>
+                <p class="text-sm text-dark opacity-8 mb-0">&copy; {% now "Y" %} Artwork. All rights reserved.</p>
+            </div>
+            <div class="col-lg-6 ms-auto text-lg-end text-center">
+                <p class="mb-5 text-lg text-dark font-weight-bold">Discover, Learn, and Grow with Artwork</p>
+                <a href="javascript:;"
+                   target="_blank"
+                   class="text-dark me-xl-4 me-4 opacity-5">
+                    <span class="fab fa-facebook"></span>
+                </a>
+                <a href="javascript:;"
+                   target="_blank"
+                   class="text-dark me-xl-4 me-4 opacity-5">
+                    <span class="fab fa-twitter"></span>
+                </a>
+                <a href="javascript:;"
+                   target="_blank"
+                   class="text-dark me-xl-4 me-4 opacity-5">
+                    <span class="fab fa-instagram"></span>
+                </a>
+                <a href="javascript:;" target="_blank" class="text-dark opacity-5">
+                    <span class="fab fa-linkedin"></span>
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
 </footer>
 <!-- -------- END FOOTER 5 w/ DARK BACKGROUND ------- -->

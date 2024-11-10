@@ -1,122 +1,686 @@
 {% extends 'layouts/base_background.html' %}
 {% load static %}
-
-{% block title %} {{ post.title }} - Artwork {% endblock title %}
-
-{% block body %} class="blog-post bg-gray-200" {% endblock body %}
-
+{% block title %}
+    {{ post.title }} - Artwork
+{% endblock title %}
+{% block body %}
+    class="blog-post bg-gray-200"
+{% endblock body %}
 {% block content %}
-<header class="header-2">
-  <div class="page-header min-vh-75 relative" style="background-image: url('{% static 'img/post-bg.jpg' %}')">
-    <span class="mask bg-gradient-secondary opacity-2"></span>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-7 text-center mx-auto">
-          <h1 class="text-white pt-3 mt-n5">{{ post.title }}</h1>
-          <p class="lead text-white mt-3">By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
-  <section class="py-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 mx-auto">
-          {% if request.user.is_authenticated and request.user.is_trainer %}
-            <div class="mb-4">
-              <a href="{% url 'post-update' post.id %}" class="btn btn-primary btn-sm">Edit Post</a>
-              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                Delete Post
-              </button>
-            </div>
-          {% endif %}
-          <div class="card mb-5">
-            <div class="card-body">
-              <div class="mb-4">
-                <video width="100%" controls>
-                  <source src="{{ post.video.url }}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              <h3 class="mb-3">{{ post.title }}</h3>
-              <div class="mb-4 rich-text-content">
-                {{ post.description|safe }}
-              </div>              
-              {% if request.user.is_authenticated and request.user.is_trainer %}
-                <div class="card" style="background: linear-gradient(to right, #18b3b1, #4ce6e4);">
-                  <div class="card-body">
-                    <h5 class="text-white mb-3">Post Analytics</h5>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="row mb-3">
-                          <div class="col-6">
-                            <p class="text-white font-weight-normal mb-2">Direct Views</p>
-                            <h4 class="text-white font-weight-bolder">{{ post.normal_views }}</h4>
-                          </div>
-                          <div class="col-6">
-                            <p class="text-white font-weight-normal mb-2">QR Code Views</p>
-                            <h4 class="text-white font-weight-bolder">{{ post.qr_views }}</h4>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-6">
-                            <p class="text-white font-weight-normal mb-2">Total Views</p>
-                            <h4 class="text-white font-weight-bolder">{{ post.normal_views|add:post.qr_views }}</h4>
-                          </div>
-                        </div>
-                      </div>
-                      {% if post.qr_code %}
-                        <div class="col-md-6 text-md-end">
-                          <img src="{{ post.qr_code.url }}" alt="QR Code" class="img-fluid mb-3" style="max-width: 150px;">
-                          <br>
-                          <a href="{{ post.qr_code.url }}" download class="btn btn-sm bg-white" style="color: #18b3b1;">Download QR Code</a>
-                        </div>
-                      {% endif %}
+    <header class="header-2">
+        <div class="page-header min-vh-75 relative"
+             style="background-image: url('{% static 'img/post-bg.jpg' %}')">
+            <span class="mask bg-gradient-secondary opacity-2"></span>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 text-center mx-auto">
+                        <h1 class="text-white pt-3 mt-n5">{{ post.title }}</h1>
+                        <p class="lead text-white mt-3">By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}</p>
                     </div>
-                  </div>
                 </div>
-              {% endif %}
             </div>
-          </div>
         </div>
-      </div>
+    </header>
+    <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        {% if request.user.is_authenticated and request.user.is_trainer %}
+                            <div class="mb-4">
+                                <a href="{% url 'post-update' post.id %}" class="btn btn-primary btn-sm">Edit Post</a>
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">Delete Post</button>
+                            </div>
+                        {% endif %}
+                        <div class="card mb-5">
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <video width="100%" controls>
+                                        <source src="{{ post.video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <h3 class="mb-3">{{ post.title }}</h3>
+                                <div class="mb-4 rich-text-content">{{ post.description|safe }}</div>
+                                {% if request.user.is_authenticated and request.user.is_trainer %}
+                                    <div class="card"
+                                         style="background: linear-gradient(to right, #18b3b1, #4ce6e4)">
+                                        <div class="card-body">
+                                            <h5 class="text-white mb-3">Post Analytics</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row mb-3">
+                                                        <div class="col-6">
+                                                            <p class="text-white font-weight-normal mb-2">Direct Views</p>
+                                                            <h4 class="text-white font-weight-bolder">{{ post.normal_views }}</h4>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="text-white font-weight-normal mb-2">QR Code Views</p>
+                                                            <h4 class="text-white font-weight-bolder">{{ post.qr_views }}</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <p class="text-white font-weight-normal mb-2">Total Views</p>
+                                                            <h4 class="text-white font-weight-bolder">{{ post.normal_views|add:post.qr_views }}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% if post.qr_code %}
+                                                    <div class="col-md-6 text-md-end">
+                                                        <img src="{{ post.qr_code.url }}"
+                                                             alt="QR Code"
+                                                             class="img-fluid mb-3"
+                                                             style="max-width: 150px">
+                                                        <br>
+                                                        <a href="{{ post.qr_code.url }}"
+                                                           download
+                                                           class="btn btn-sm bg-white"
+                                                           style="color: #18b3b1">Download QR Code</a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </section>
-</div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this post? This action cannot be undone.
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Cancel</button>
-        <form action="{% url 'post-delete' post.id %}" method="POST">
-          {% csrf_token %}
-          <button type="submit" class="btn bg-gradient-danger mb-0">Delete Post</button>
-        </form>
-      </div>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade"
+         id="deleteModal"
+         tabindex="-1"
+         aria-labelledby="deleteModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">Are you sure you want to delete this post? This action cannot be undone.</div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button"
+                            class="btn bg-gradient-dark mb-0"
+                            data-bs-dismiss="modal">Cancel</button>
+                    <form action="{% url 'post-delete' post.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn bg-gradient-danger mb-0">Delete Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-{% endblock content %}
+    
+    <div class="card card-body blur shadow-blur mx-3 mx-md-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="faq-section mt-3">
+                        <h4 class="mb-4">Frequently Asked Questions</h4>
+                        {% if user.is_trainer %}
+                            <button class="btn btn-primary btn-sm mb-4" data-bs-toggle="modal" data-bs-target="#addFaqModal">
+                                Add FAQ
+                            </button>
+                        {% endif %}
+                        
+                        <!-- FAQs Accordion -->
+                        <div class="accordion" id="faqAccordion">
+                            {% for faq in post.ordered_faqs %}
+                                <div class="accordion-item mb-3" id="faq-{{ faq.id }}">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-{{ faq.id }}">
+                                            {{ faq.question }}
+                                        </button>
+                                    </h2>
+                                    <div id="faq-collapse-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                        <div class="accordion-body">
+                                            <p>{{ faq.answer }}</p>
+                                            {% if user.is_trainer %}
+                                                <div class="mt-2 m-3 mb-0">
+                                                    <button class="btn btn-primary btn-sm edit-faq" data-faq-id="{{ faq.id }}" data-bs-toggle="modal" data-bs-target="#editFaqModal">
+                                                        Edit
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm delete-faq" data-faq-id="{{ faq.id }}" data-bs-toggle="modal" data-bs-target="#deleteFaqModal">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted">No FAQs available for this post.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add FAQ Modal -->
+    <div class="modal fade" id="addFaqModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add FAQ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addFaqForm">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="faqQuestion">Question</label>
+                            <input type="text" class="form-control" id="faqQuestion" name="question" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="faqAnswer">Answer</label>
+                            <textarea class="form-control" id="faqAnswer" name="answer" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn bg-gradient-primary mb-0">Add FAQ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit FAQ Modal -->
+    <div class="modal fade" id="editFaqModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit FAQ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editFaqForm">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <input type="hidden" id="editFaqId" name="faq_id">
+                        <div class="form-group mb-3">
+                            <label for="editFaqQuestion">Question</label>
+                            <input type="text" class="form-control" id="editFaqQuestion" name="question" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFaqAnswer">Answer</label>
+                            <textarea class="form-control" id="editFaqAnswer" name="answer" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn bg-gradient-primary mb-0">Update FAQ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete FAQ Modal -->
+    <div class="modal fade" id="deleteFaqModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete FAQ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this FAQ? This action cannot be undone.
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn bg-gradient-danger mb-0" id="confirmDeleteFaq">Delete FAQ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card card-body blur shadow-blur mx-3 mx-md-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="comments-section mt-3">
+                        <h4 class="mb-4">Ask a Question</h4>
 
-{% block javascripts %}
-{{ block.super }}
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<style>
-  .rich-text-content img {
-    max-width: 100%;
-    height: auto;
-  }
-</style>
-{% endblock javascripts %}
+                        <!-- Comment Form -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <form id="comment-form" data-post-id="{{ post.id }}">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="content" rows="3" placeholder="Ask a question..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm mt-3">Submit Question</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Comments List -->
+                        <div class="comments-list">
+                            {% for comment in comments %}
+                                {% if user == comment.author or user.is_trainer or comment.author.is_trainer %}
+                                    <div class="comment card mb-3" id="comment-{{ comment.id }}">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="mb-1">
+                                                        {{ comment.author.username }}
+                                                        {% if comment.author.is_trainer %}
+                                                            <span class="badge bg-gradient-primary">Trainer</span>
+                                                        {% endif %}
+                                                    </h6>
+                                                    <p class="comment-content mb-2">{{ comment.content }}</p>
+                                                    <small class="text-muted">{{ comment.created_at|date:"F d, Y H:i" }}</small>
+                                                </div>
+                                                <div class="comment-actions">
+                                                    {% if user == comment.author %}
+                                                        <button class="btn btn-link btn-sm edit-comment" data-comment-id="{{ comment.id }}">
+                                                            <!-- <i class="fas fa-edit"></i> -->
+                                                        </button>
+                                                    {% endif %}
+                                                    {% if user == comment.author or user.is_trainer %}
+                                                        <button class="btn btn-link btn-sm text-danger delete-comment" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#deleteQuestionModal" 
+                                                                data-comment-id="{{ comment.id }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <!-- Edit Form (hidden by default) -->
+                                            <form class="edit-form mt-3" style="display: none;" data-comment-id="{{ comment.id }}">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" name="content" rows="2">{{ comment.content }}</textarea>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                                    <button type="button" class="btn btn-secondary btn-sm cancel-edit">Cancel</button>
+                                                </div>
+                                            </form>
+
+                                            {% if user.is_trainer %}
+                                                <!-- Reply Button -->
+                                                <button class="btn btn-link btn-sm show-reply-form" data-comment-id="{{ comment.id }}">
+                                                    Answer Question
+                                                </button>
+                                                <!-- Reply Form (hidden by default) -->
+                                                <form class="reply-form mt-3" style="display: none;" data-parent-id="{{ comment.id }}">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" name="content" rows="2" placeholder="Write your answer..."></textarea>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <button type="submit" class="btn btn-primary btn-sm">Submit Answer</button>
+                                                        <button type="button" class="btn btn-secondary btn-sm cancel-reply">Cancel</button>
+                                                    </div>
+                                                </form>
+                                            {% endif %}
+
+                                            <!-- Replies -->
+                                            <div class="replies ms-4 mt-3">
+                                                {% for reply in comment.get_replies %}
+                                                    <div class="reply card mb-2" id="comment-{{ reply.id }}">
+                                                        <div class="card-body py-2">
+                                                            <div class="d-flex justify-content-between align-items-start">
+                                                                <div>
+                                                                    <h6 class="mb-1">
+                                                                        {{ reply.author.username }}
+                                                                        {% if reply.author.is_trainer %}
+                                                                            <span class="badge bg-gradient-primary">Trainer</span>
+                                                                        {% endif %}
+                                                                    </h6>
+                                                                    <p class="comment-content mb-2">{{ reply.content }}</p>
+                                                                    <small class="text-muted">{{ reply.created_at|date:"F d, Y H:i" }}</small>
+                                                                </div>
+                                                                <div class="reply-actions">
+                                                                    {% if user == reply.author %}
+                                                                        <button class="btn btn-link btn-sm edit-comment" data-comment-id="{{ reply.id }}">
+                                                                            <!-- <i class="fas fa-edit"></i> -->
+                                                                        </button>
+                                                                    {% endif %}
+                                                                    <!-- For answers (in the replies section) -->
+                                                                    {% if user == reply.author or user.is_trainer %}
+                                                                        <button class="btn btn-link btn-sm text-danger delete-comment" 
+                                                                                data-bs-toggle="modal" 
+                                                                                data-bs-target="#deleteAnswerModal" 
+                                                                                data-comment-id="{{ reply.id }}">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% empty %}
+                                <p class="text-muted">No questions yet. Be the first to ask a question!</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Question Modal -->
+    <div class="modal fade" id="deleteQuestionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this question? This action cannot be undone.
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn bg-gradient-danger mb-0" id="confirmDeleteQuestion">Delete Question</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Answer Modal -->
+    <div class="modal fade" id="deleteAnswerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Answer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this answer? This action cannot be undone.
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn bg-gradient-dark mb-0" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn bg-gradient-danger mb-0" id="confirmDeleteAnswer">Delete Answer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock content %}
+    {% block javascripts %}
+        {{ block.super }}
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Comment Form Submit
+                    document.getElementById('comment-form').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const postId = this.dataset.postId;
+                        const content = this.querySelector('textarea[name="content"]').value;
+
+                        fetch(`/post/${postId}/comment/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `content=${encodeURIComponent(content)}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            location.reload();
+                        });
+                    });
+
+                    // Delete Question/Answer handling
+                    let commentToDelete = null;
+
+                    document.querySelectorAll('.delete-comment').forEach(button => {
+                        button.addEventListener('click', function() {
+                            commentToDelete = this.dataset.commentId;
+                        });
+                    });
+
+                    document.getElementById('confirmDeleteQuestion').addEventListener('click', function() {
+                        if (commentToDelete) {
+                            deleteComment(commentToDelete, '#deleteQuestionModal');
+                        }
+                    });
+
+                    document.getElementById('confirmDeleteAnswer').addEventListener('click', function() {
+                        if (commentToDelete) {
+                            deleteComment(commentToDelete, '#deleteAnswerModal'); 
+                        }
+                    });
+
+                    function deleteComment(commentId, modalId) {
+                        fetch(`/comment/${commentId}/delete/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Hide the modal
+                            const modal = bootstrap.Modal.getInstance(document.querySelector(modalId));
+                            modal.hide();
+
+                            // Remove the comment from the DOM
+                            document.getElementById(`comment-${commentId}`).remove();
+
+                            // Reset the commentToDelete
+                            commentToDelete = null;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    }
+
+                    // Edit Comment
+                    document.querySelectorAll('.edit-comment').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const commentId = this.dataset.commentId;
+                            const commentDiv = document.getElementById(`comment-${commentId}`);
+                            const editForm = commentDiv.querySelector('.edit-form');
+                            editForm.style.display = 'block';
+                        });
+                    });
+
+                    // Cancel Edit
+                    document.querySelectorAll('.cancel-edit').forEach(button => {
+                        button.addEventListener('click', function() {
+                            this.closest('.edit-form').style.display = 'none';
+                        });
+                    });
+
+                    // Show Reply Form
+                    document.querySelectorAll('.show-reply-form').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const commentId = this.dataset.commentId;
+                            const replyForm = this.nextElementSibling;
+                            replyForm.style.display = 'block';
+                        });
+                    });
+
+                    // Cancel Reply
+                    document.querySelectorAll('.cancel-reply').forEach(button => {
+                        button.addEventListener('click', function() {
+                            this.closest('.reply-form').style.display = 'none';
+                        });
+                    });
+
+                    // Submit Reply
+                    document.querySelectorAll('.reply-form').forEach(form => {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const postId = {{ post.id }};
+                            const parentId = this.dataset.parentId;
+                            const content = this.querySelector('textarea[name="content"]').value;
+
+                            fetch(`/post/${postId}/comment/`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: `content=${encodeURIComponent(content)}&parent_id=${parentId}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                location.reload();
+                            });
+                        });
+                    });
+                });
+                
+                // FAQ Management
+                document.addEventListener('DOMContentLoaded', function() {
+                    let faqToDelete = null;
+                
+                    // Add FAQ
+                    document.getElementById('addFaqForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const postId = {{ post.id }};
+                        const formData = new FormData(this);
+                
+                        fetch(`/post/${postId}/faq/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            },
+                            body: new URLSearchParams(formData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            location.reload();
+                        });
+                    });
+                
+                    // Edit FAQ
+                    document.querySelectorAll('.edit-faq').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const faqId = this.dataset.faqId;
+                            const faqItem = document.getElementById(`faq-${faqId}`);
+                            const question = faqItem.querySelector('.accordion-button').textContent.trim();
+                            const answer = faqItem.querySelector('.accordion-body p').textContent.trim();
+                
+                            document.getElementById('editFaqId').value = faqId;
+                            document.getElementById('editFaqQuestion').value = question;
+                            document.getElementById('editFaqAnswer').value = answer;
+                        });
+                    });
+                
+                    // Submit Edit FAQ Form
+                    document.getElementById('editFaqForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const faqId = document.getElementById('editFaqId').value;
+                        const formData = new FormData(this);
+                
+                        fetch(`/faq/${faqId}/update/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            },
+                            body: new URLSearchParams(formData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            location.reload();
+                        });
+                    });
+                
+                    // Delete FAQ
+                    document.querySelectorAll('.delete-faq').forEach(button => {
+                        button.addEventListener('click', function() {
+                            faqToDelete = this.dataset.faqId;
+                        });
+                    });
+                
+                    document.getElementById('confirmDeleteFaq').addEventListener('click', function() {
+                        if (faqToDelete) {
+                            fetch(`/faq/${faqToDelete}/delete/`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                const modal = bootstrap.Modal.getInstance(document.getElementById('deleteFaqModal'));
+                                modal.hide();
+                                document.getElementById(`faq-${faqToDelete}`).remove();
+                                faqToDelete = null;
+                            });
+                        }
+                    });
+                });
+            </script>
+            <style>
+                .rich-text-content img {
+                    max-width: 100%;
+                    height: auto;
+                }
+                .comment-actions button,
+                .reply-actions button {
+                    padding: 0 5px;
+                }
+                .replies {
+                    border-left: 3px solid #4CAF50;
+                    padding-left: 1rem;
+                    margin-top: 1rem;
+                }
+                .btn.btn-sm i, .btn-group-sm>.btn i {
+                    font-size: 1rem !important;
+                }
+                .badge {
+                    margin-left: 5px;
+                    font-size: 0.75em;
+                    padding: 0.35em 0.65em;
+                }/* FAQ Specific Styles */
+                    .accordion-body {
+                        color: #344767; 
+                        background-color: #fff; /* Light background */
+                    }
+                
+                    .accordion-button {
+                        color: #344767;
+                        padding-left:20px;
+                    }
+                
+                    .accordion-button:not(.collapsed) {
+                        background-color: rgb(29, 214, 211); /* Light teal background when expanded */
+                        color: #ffffff;
+                    }
+                
+                    /* Ensure text remains visible in all states */
+                    .accordion-item p, 
+                    .accordion-body p {
+                        color: #344767 !important; /* Force text color */
+                        padding-left:20px;
+
+                    }
+                
+                    /* Style for the accordion border */
+                    .accordion-item {
+                        border: 1px solid rgba(0, 0, 0, 0.125);
+                        border-radius: 0.5rem;
+                        margin-bottom: 0.5rem;
+                    }
+                
+                    /* Better hover state for buttons */
+                    .accordion-button:hover {
+                        background-color: rgb(29, 214, 211);
+                    }
+            </style>
+    {% endblock javascripts %}

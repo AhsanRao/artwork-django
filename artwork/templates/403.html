@@ -1,8 +1,10 @@
 {% extends 'layouts/base_background.html' %}
 {% block title %}
-    404 Not Found
+    403 Forbidden
 {% endblock title %}
-{% comment %} {% block body %} class="error-page" {% endblock body %} {% endcomment %}
+{% block body %}
+    class="error-page"
+{% endblock body %}
 {% block header %}
     {% include 'includes/navigation_transparent.html' %}
 {% endblock header %}
@@ -17,12 +19,12 @@
                     <div class="card z-index-0 fadeIn3 fadeInBottom">
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                                <h2 class="text-white font-weight-bolder text-center mt-2 mb-0">404 Not Found</h2>
+                                <h2 class="text-white font-weight-bolder text-center mt-2 mb-0">403 Forbidden</h2>
                             </div>
                         </div>
                         <div class="card-body text-center">
-                            <h4 class="mt-4">Page Not Found</h4>
-                            <p>The page you're looking for doesn't exist or has been moved.</p>
+                            <h4 class="mt-4">Access Denied</h4>
+                            <p>Sorry, you don't have permission to access this page.</p>
                             <a href="{% url 'index' %}" class="btn bg-gradient-primary mt-3">Go to Homepage</a>
                         </div>
                     </div>

@@ -1,93 +1,167 @@
 {% extends 'layouts/base_background.html' %}
 {% load static %}
-
-{% block title %} {% if form.instance.pk %}Edit{% else %}Create{% endif %} Post - Artwork {% endblock title %}
-
-{% block body %} class="blog-post-form bg-gray-200" {% endblock body %}
-
+{% block title %}
+    {% if form.instance.pk %}
+        Edit
+    {% else %}
+        Create
+    {% endif %}
+    Post - Artwork
+{% endblock title %}
+{% block body %}
+    class="blog-post-form bg-gray-200"
+{% endblock body %}
 {% block content %}
-<header class="header-2">
-  <div class="page-header min-vh-75 relative" style="background-image: url('{% static 'img/bg2.jpg' %}')">
-    <span class="mask bg-gradient-primary opacity-4"></span>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-7 text-center mx-auto">
-          <h1 class="text-white pt-3 mt-n5">{% if form.instance.pk %}Edit{% else %}Create{% endif %} Post</h1>
-          <p class="lead text-white mt-3">Share your fitness knowledge and inspiration.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
-  <section class="py-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <div class="card">
-            <div class="card-body">
-              <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group mb-4">
-                  <label for="{{ form.title.id_for_label }}" style="font-size: 0.875rem; font-weight: 400; margin-bottom: 0.5rem; color: #344767;">{{ form.title.label }}</label>
-                  <input type="text" class="form-control" id="{{ form.title.id_for_label }}" name="{{ form.title.name }}" 
-                         {% if form.title.value %}value="{{ form.title.value }}"{% endif %}
-                         style="border: 1px solid #d2d6da; padding: 0.5rem 0.75rem; transition: all 0.2s ease; width: 100%;">
-                </div>
-                {% if form.title.errors %}
-                  <small class="text-danger">{{ form.title.errors }}</small>
-                {% endif %}
-
-                <div class="form-group mb-4">
-                    <label for="editor" style="font-size: 0.875rem; font-weight: 400; margin-bottom: 0.5rem; color: #344767;">{{ form.description.label }}</label>
-                    <div id="editor"></div>
-                    <textarea class="form-control d-none" id="{{ form.description.id_for_label }}" name="{{ form.description.name }}">{{ form.description.value|default_if_none:""|safe }}</textarea>
-                  </div>
-                  {% if form.description.errors %}
-                    <small class="text-danger">{{ form.description.errors }}</small>
-                  {% endif %}
-                  
-
-                  <div class="form-group mb-4">
-                    <label for="{{ form.video.id_for_label }}" style="font-size: 0.875rem; font-weight: 400; margin-bottom: 0.5rem; color: #344767;">{{ form.video.label }}</label>
-                    <div class="custom-file-input-wrapper" style="position: relative; overflow: hidden; display: flex; align-items: center; width: 100%; border: 1px solid #d2d6da; transition: all 0.2s ease;">
-                      <input type="file" class="custom-file-input" id="{{ form.video.id_for_label }}" name="{{ form.video.name }}" accept="video/*"
-                             style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 2;">
-                      <div class="choose-file-button" style="padding: 0.5rem 0.75rem; background-color: #e9ecef; border-right: 1px solid #d2d6da; white-space: nowrap; color: #344767;">
-                        Choose file
-                      </div>
-                      <div class="file-chosen-text" style="padding: 0.5rem 0.75rem; flex-grow: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        No file chosen
-                      </div>
+    <header class="header-2">
+        <div class="page-header min-vh-75 relative"
+             style="background-image: url('{% static 'img/bg2.jpg' %}')">
+            <span class="mask bg-gradient-primary opacity-4"></span>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 text-center mx-auto">
+                        <h1 class="text-white pt-3 mt-n5">
+                            {% if form.instance.pk %}
+                                Edit
+                            {% else %}
+                                Create
+                            {% endif %}
+                            Post
+                        </h1>
+                        <p class="lead text-white mt-3">Share your fitness knowledge and inspiration.</p>
                     </div>
-                  </div>
-                  {% if form.video.errors %}
-                    <small class="text-danger">{{ form.video.errors }}</small>
-                  {% endif %}
-
-                {% if form.instance.video %}
-                  <p><strong>Current video: </strong>{{ form.instance.video.name }}</p>
-                {% endif %}
-
-                <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">
-                  {% if form.instance.pk %}Update{% else %}Create{% endif %} Post
-                </button>
-              </form>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </header>
+    <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group mb-4">
+                                        <label for="{{ form.title.id_for_label }}"
+                                               style="font-size: 0.875rem;
+                                                      font-weight: 400;
+                                                      margin-bottom: 0.5rem;
+                                                      color: #344767">{{ form.title.label }}</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               id="{{ form.title.id_for_label }}"
+                                               name="{{ form.title.name }}"
+                                               {% if form.title.value %}value="{{ form.title.value }}"{% endif %}
+                                               style="border: 1px solid #d2d6da;
+                                                      padding: 0.5rem 0.75rem;
+                                                      transition: all 0.2s ease;
+                                                      width: 100%">
+                                    </div>
+                                    {% if form.title.errors %}<small class="text-danger">{{ form.title.errors }}</small>{% endif %}
+                                    <div class="form-group mb-4">
+                                        <label for="editor"
+                                               style="font-size: 0.875rem;
+                                                      font-weight: 400;
+                                                      margin-bottom: 0.5rem;
+                                                      color: #344767">{{ form.description.label }}</label>
+                                        <div id="editor"></div>
+                                        <textarea class="form-control d-none"
+                                                  id="{{ form.description.id_for_label }}"
+                                                  name="{{ form.description.name }}">{{ form.description.value|default_if_none:""|safe }}</textarea>
+                                    </div>
+                                    {% if form.description.errors %}
+                                        <small class="text-danger">{{ form.description.errors }}</small>
+                                    {% endif %}
+                                    <div class="form-group mb-4">
+                                        <label for="{{ form.video.id_for_label }}"
+                                               style="font-size: 0.875rem;
+                                                      font-weight: 400;
+                                                      margin-bottom: 0.5rem;
+                                                      color: #344767">{{ form.video.label }}</label>
+                                        <div class="custom-file-input-wrapper"
+                                             style="position: relative;
+                                                    overflow: hidden;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    width: 100%;
+                                                    border: 1px solid #d2d6da;
+                                                    transition: all 0.2s ease">
+                                            <input type="file"
+                                                   class="custom-file-input"
+                                                   id="{{ form.video.id_for_label }}"
+                                                   name="{{ form.video.name }}"
+                                                   accept="video/*"
+                                                   style="position: absolute;
+                                                          left: 0;
+                                                          top: 0;
+                                                          opacity: 0;
+                                                          width: 100%;
+                                                          height: 100%;
+                                                          cursor: pointer;
+                                                          z-index: 2">
+                                            <div class="choose-file-button"
+                                                 style="padding: 0.5rem 0.75rem;
+                                                        background-color: #e9ecef;
+                                                        border-right: 1px solid #d2d6da;
+                                                        white-space: nowrap;
+                                                        color: #344767">Choose file</div>
+                                            <div class="file-chosen-text"
+                                                 style="padding: 0.5rem 0.75rem;
+                                                        flex-grow: 1;
+                                                        overflow: hidden;
+                                                        text-overflow: ellipsis;
+                                                        white-space: nowrap">No file chosen</div>
+                                        </div>
+                                    </div>
+                                    {% if form.video.errors %}<small class="text-danger">{{ form.video.errors }}</small>{% endif %}
+                                    {% if form.instance.video %}
+                                        <p>
+                                            <strong>Current video:</strong>{{ form.instance.video.name }}
+                                        </p>
+                                    {% endif %}
+                                    <div class="form-group mb-4">
+                                        <label style="font-size: 0.875rem; font-weight: 400; margin-bottom: 0.5rem; color: #344767">FAQs</label>
+                                        <div id="faqsContainer">
+                                            {% if form.instance.pk %}
+                                                {% for faq in form.instance.ordered_faqs %}
+                                                    <div class="faq-item mb-3">
+                                                        <input type="hidden" name="faq_id[]" value="{{ faq.id }}">
+                                                        <div class="form-group mb-2">
+                                                            <input type="text" class="form-control" name="faq_question[]" value="{{ faq.question }}" placeholder="Question">
+                                                        </div>
+                                                        <div class="form-group mb-2">
+                                                            <textarea class="form-control" name="faq_answer[]" rows="2" placeholder="Answer">{{ faq.answer }}</textarea>
+                                                        </div>
+                                                        <button type="button" class="btn btn-danger btn-sm remove-faq">Remove FAQ</button>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                        <button type="button" class="btn btn-primary btn-sm mt-2" id="addFaqField">Add FAQ</button>
+                                    </div>
+                                    <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">
+                                        {% if form.instance.pk %}
+                                            Update
+                                        {% else %}
+                                            Create
+                                        {% endif %}
+                                        Post
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </section>
-</div>
 {% endblock content %}
-
 {% block javascripts %}
-{{ block.super }}
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script>
+    {{ block.super }}
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script>
 document.addEventListener('DOMContentLoaded', function() {
 
     var fileInput = document.getElementById('{{ form.video.id_for_label }}');
@@ -174,5 +248,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
-</script>
+document.getElementById('addFaqField').addEventListener('click', function() {
+    const faqHtml = `
+        <div class="faq-item mb-3">
+            <input type="hidden" name="faq_id[]" value="">
+            <div class="form-group mb-2">
+                <input type="text" class="form-control" name="faq_question[]" placeholder="Question">
+            </div>
+            <div class="form-group mb-2">
+                <textarea class="form-control" name="faq_answer[]" rows="2" placeholder="Answer"></textarea>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm remove-faq">Remove FAQ</button>
+        </div>
+    `;
+    document.getElementById('faqsContainer').insertAdjacentHTML('beforeend', faqHtml);
+});
+
+document.getElementById('faqsContainer').addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-faq')) {
+        e.target.closest('.faq-item').remove();
+    }
+});
+    </script>
 {% endblock javascripts %}

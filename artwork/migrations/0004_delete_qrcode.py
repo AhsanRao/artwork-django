@@ -6,11 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('artwork', '0003_post_qr_code'),
+        ("artwork", "0003_post_qr_code"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='QRCode',
+            name="QRCode",
         ),
     ]

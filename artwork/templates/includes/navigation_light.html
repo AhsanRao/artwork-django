@@ -1,124 +1,150 @@
 {% load i18n static artwork %}
-
 <!-- Navbar Light -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-  <div class="container">
-    <a class="navbar-brand" href="/" rel="tooltip" title="Artwork" data-placement="bottom">
-      <img src="{% static '/img/logos/logo-c.png' %}" alt="Artwork" style="height: 40px;">
-    </a>
-    <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-12 ps-lg-5" id="navigation">
-      <ul class="navbar-nav navbar-nav-hover ms-auto">
-        {% if not request.user.is_authenticated %}
-          <li class="nav-item">
-            <a href="{% url 'about-us' %}" class="nav-link">
-              <span>About Us</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'contact-us' %}" class="nav-link">
-              <span>Contact Us</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'login' %}" class="btn bg-gradient-primary btn-sm mb-0 me-1">
-              Login
-            </a>
-          </li>
-          {% elif request.user.is_superuser %}
-          <li class="nav-item dropdown dropdown-hover mx-2">
-            <a class="nav-link ps-2 d-flex cursor-pointer align-items-center" id="dropdownMenuPages" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="material-icons opacity-6 me-2 text-md">dashboard</i>
-              Admin
-              <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow" class="arrow ms-auto ms-md-2">
-            </a>
-            <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-xl mt-0 mt-lg-3" aria-labelledby="dropdownMenuPages">
-              <div class="d-none d-lg-block">
-                <h6 class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-1">
-                  Admin Pages
-                </h6>
-                {% admin_get_menu as app_list %}
-                {% if app_list %}
-                  {% for app in app_list %}
-                    {% if app.has_perms and not app.pinned %}
-                      <a href="{{ app.url }}" class="dropdown-item border-radius-md" data-bs-toggle="collapse" data-bs-target="#collapse-{{app.app_label}}">
-                        <span>{{ app.label|slice:10 }}{% if app.label|length > 10 %}..{% endif %}</span>
-                      </a>
-                      {% if app.models %}
-                        <div class="collapse" id="collapse-{{app.app_label}}">
-                          <ul class="flex-column nav">
-                            {% for model in app.models %}
-                              {% if model.url %}
-                                <li class="nav-item{% if 'bootstrap-tables' in segment or model.url in request.path|urlencode %} active {% endif %} list-unstyled">
-                                  <a class="nav-link" href="{{ model.url }}">
-                                    <span class="ms-5 text-dark">{{ model.label }}</span>
-                                  </a>
-                                </li>
-                              {% else %}
-                                <li class="nav-item list-unstyled">{{ model.label }}</li>
-                              {% endif %}
-                            {% endfor %}
-                          </ul>
+    <div class="container">
+        <a class="navbar-brand"
+           href="/"
+           rel="tooltip"
+           title="Artwork"
+           data-placement="bottom">
+            <img src="{% static '/img/logos/logo-c.png' %}"
+                 alt="Artwork"
+                 style="height: 40px">
+        </a>
+        <button class="navbar-toggler shadow-none ms-2"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navigation"
+                aria-controls="navigation"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0 ms-lg-12 ps-lg-5"
+             id="navigation">
+            <ul class="navbar-nav navbar-nav-hover ms-auto">
+                {% if not request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'about-us' %}" class="nav-link">
+                            <span>About Us</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'contact-us' %}" class="nav-link">
+                            <span>Contact Us</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}"
+                           class="btn bg-gradient-primary btn-sm mb-0 me-1">Login</a>
+                    </li>
+                {% elif request.user.is_superuser %}
+                    <li class="nav-item dropdown dropdown-hover mx-2">
+                        <a class="nav-link ps-2 d-flex cursor-pointer align-items-center"
+                           id="dropdownMenuPages"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <i class="material-icons opacity-6 me-2 text-md">dashboard</i>
+                            Admin
+                            <img src="{% static 'img/down-arrow-dark.svg' %}"
+                                 alt="down-arrow"
+                                 class="arrow ms-auto ms-md-2">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-xl mt-0 mt-lg-3"
+                             aria-labelledby="dropdownMenuPages">
+                            <div class="d-none d-lg-block">
+                                <h6 class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-1">Admin Pages</h6>
+                                {% admin_get_menu as app_list %}
+                                {% if app_list %}
+                                    {% for app in app_list %}
+                                        {% if app.has_perms and not app.pinned %}
+                                            <a href="{{ app.url }}"
+                                               class="dropdown-item border-radius-md"
+                                               data-bs-toggle="collapse"
+                                               data-bs-target="#collapse-{{ app.app_label }}">
+                                                <span>{{ app.label|slice:10 }}
+                                                    {% if app.label|length > 10 %}..{% endif %}
+                                                </span>
+                                            </a>
+                                            {% if app.models %}
+                                                <div class="collapse" id="collapse-{{ app.app_label }}">
+                                                    <ul class="flex-column nav">
+                                                        {% for model in app.models %}
+                                                            {% if model.url %}
+                                                                <li class="nav-item{% if 'bootstrap-tables' in segment or model.url in request.path|urlencode %} active {% endif %} list-unstyled">
+                                                                    <a class="nav-link" href="{{ model.url }}">
+                                                                        <span class="ms-5 text-dark">{{ model.label }}</span>
+                                                                    </a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="nav-item list-unstyled">{{ model.label }}</li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                      {% endif %}
+                    </li>
+                {% else %}
+                    {% if request.user.is_trainer %}
+                        <li class="nav-item">
+                            <a href="{% url 'post-list' %}" class="nav-link">
+                                <span>Posts</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'post-create' %}" class="nav-link">
+                                <span>Add Post</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'post-list' %}" class="nav-link">
+                                <span>Posts</span>
+                            </a>
+                        </li>
                     {% endif %}
-                  {% endfor %}
+                    <li class="nav-item">
+                        <a href="{% url 'about-us' %}" class="nav-link">
+                            <span>About Us</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'contact-us' %}" class="nav-link">
+                            <span>Contact Us</span>
+                        </a>
+                    </li>
                 {% endif %}
-              </div>
-            </div>
-          </li>
-        {% else %}
-          {% if request.user.is_trainer %}
-            <li class="nav-item">
-              <a href="{% url 'post-list' %}" class="nav-link">
-                <span>Posts</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'post-create' %}" class="nav-link">
-                <span>Add Post</span>
-              </a>
-            </li>
-          {% else %}
-            <li class="nav-item">
-              <a href="{% url 'post-list' %}" class="nav-link">
-                <span>Posts</span>
-              </a>
-            </li>
-          {% endif %}
-          <li class="nav-item">
-            <a href="{% url 'about-us' %}" class="nav-link">
-              <span>About Us</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'contact-us' %}" class="nav-link">
-              <span>Contact Us</span>
-            </a>
-          </li>
-        {% endif %}
-        
-        {% if request.user.is_authenticated %}
-          <li class="nav-item dropdown dropdown-hover mx-2">
-            <a class="nav-link ps-2 d-flex cursor-pointer align-items-center" id="dropdownMenuUser" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="material-icons opacity-6 me-2 text-md">person</i>
-              Profile
-              <img src="{% static 'img/down-arrow-dark.svg' %}" alt="down-arrow" class="arrow ms-auto ms-md-2">
-            </a>
-            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-xl mt-0 mt-lg-3" aria-labelledby="dropdownMenuUser">
-              <a href="{% url 'password_change' %}" class="dropdown-item border-radius-md">
-                <span>Change Password</span>
-              </a>
-              <a href="{% url 'logout' %}" class="dropdown-item border-radius-md">
-                <span>Logout</span>
-              </a>
-            </div>
-          </li>
-        {% endif %}
-      </ul>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item dropdown dropdown-hover mx-2">
+                        <a class="nav-link ps-2 d-flex cursor-pointer align-items-center"
+                           id="dropdownMenuUser"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <i class="material-icons opacity-6 me-2 text-md">person</i>
+                            Profile
+                            <img src="{% static 'img/down-arrow-dark.svg' %}"
+                                 alt="down-arrow"
+                                 class="arrow ms-auto ms-md-2">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-xl mt-0 mt-lg-3"
+                             aria-labelledby="dropdownMenuUser">
+                            <a href="{% url 'password_change' %}"
+                               class="dropdown-item border-radius-md">
+                                <span>Change Password</span>
+                            </a>
+                            <a href="{% url 'logout' %}" class="dropdown-item border-radius-md">
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 <!-- End Navbar -->
