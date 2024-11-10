@@ -30,6 +30,7 @@ if not SECRET_KEY:
 
 # Enable/Disable DEBUG Mode
 DEBUG = str2bool(os.environ.get('DEBUG'))
+DEBUG = False
 #print(' DEBUG -> ' + str(DEBUG) ) 
 
 # Docker HOST
