@@ -161,86 +161,32 @@ class PostDetailView(LoginRequiredMixin, DetailView):
         return self.render_to_response(context)
 
 
-from django.core.files.uploadedfile import TemporaryUploadedFile
-from django.core.files import File
-import os
-import subprocess
-
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
     fields = ["title", "description", "video"]
     template_name = "blog/post_form.html"
 
     def form_valid(self, form):
-        try:
-            # Set the author
-            form.instance.author = self.request.user
-            
-            # First save to get the instance
-            self.object = form.save(commit=False)
-            
-            # Generate thumbnail before saving
-            if self.object.video:
-                input_file = self.object.video.path
-                output_file = os.path.join(
-                    os.path.dirname(input_file),
-                    f"thumbnail_{os.path.basename(input_file)}.jpg"
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        # Handle FAQs
+        faqs_data = self.request.POST.getlist('faq_question[]')
+        faq_answers = self.request.POST.getlist('faq_answer[]')
+        for i, (question, answer) in enumerate(zip(faqs_data, faq_answers)):
+            if question and answer:  # Only create if both fields are filled
+                FAQ.objects.create(
+                    post=self.object,
+                    question=question,
+                    answer=answer,
+                    order=i
                 )
-                print(f"Generating thumbnail for {input_file} to {output_file}")
-                
-                try:
-                    # Use ffmpeg to generate thumbnail
-                    command = [
-                        'ffmpeg',
-                        '-i', input_file,
-                        '-ss', '00:00:01',
-                        '-vframes', '1',
-                        '-vf', 'scale=480:-1',
-                        '-y',
-                        output_file
-                    ]
-                    
-                    subprocess.run(command, check=True, capture_output=True)
-                    
-                    # Save the thumbnail if it was generated
-                    if os.path.exists(output_file):
-                        with open(output_file, 'rb') as thumb_file:
-                            self.object.thumbnail.save(
-                                f"thumbnail_{os.path.basename(input_file)}.jpg",
-                                File(thumb_file),
-                                save=False
-                            )
-                        os.remove(output_file)
-                except Exception as e:
-                    print(f"Thumbnail generation error: {str(e)}")
-
-            # Save the object
-            self.object.save()
-
-            # Handle FAQs
-            faqs_data = self.request.POST.getlist('faq_question[]')
-            faq_answers = self.request.POST.getlist('faq_answer[]')
-            for i, (question, answer) in enumerate(zip(faqs_data, faq_answers)):
-                if question and answer:
-                    FAQ.objects.create(
-                        post=self.object,
-                        question=question,
-                        answer=answer,
-                        order=i
-                    )
-
-            # Generate QR code
-            self.object.generate_qr_code()
-            self.object.save()
-
-            return super(PostCreateView, self).form_valid(form)
-
-        except Exception as e:
-            print(f"Form validation error: {str(e)}")
-            raise
+        self.object.generate_thumbnail()
+        self.object.generate_qr_code()
+        return response
 
     def test_func(self):
         return self.request.user.is_trainer
+
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post

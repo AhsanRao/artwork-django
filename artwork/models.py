@@ -43,43 +43,37 @@ class Post(models.Model):
         Post.objects.filter(pk=self.pk).update(qr_views=models.F('qr_views') + 1)  # type: ignore
 
     def generate_thumbnail(self):
-        if not self.video or not hasattr(self.video, 'path'):
+        if not self.video:
             return
 
-        try:
-            input_file = self.video.path
-            output_file = os.path.join(
-                os.path.dirname(input_file),
-                f"thumbnail_{os.path.basename(input_file)}.jpg"
-            )
+        input_file = self.video.path
+        output_file = os.path.join(
+            os.path.dirname(input_file), f"thumbnail_{self.pk}.jpg"
+        )
 
-            # Use full path to ffmpeg
-            ffmpeg_path = '/usr/bin/ffmpeg'
-            
+        try:
+            # Use subprocess directly to call ffmpeg
             command = [
-                ffmpeg_path,  # Use full path
-                '-i', input_file,
-                '-ss', '00:00:01',
-                '-vframes', '1',
-                '-vf', 'scale=480:-1',
-                '-y',
+                'ffmpeg',
+                '-i', input_file,    # Input file
+                '-ss', '00:00:01',   # Seek to 1 second
+                '-vframes', '1',     # Extract 1 frame
+                '-vf', 'scale=480:-1',  # Scale width to 480px, maintain aspect ratio
+                '-y',                # Overwrite output file
                 output_file
             ]
-
-            print(f"Generating thumbnail for {input_file} to {output_file}")
-            result = subprocess.run(command, capture_output=True, text=True)
             
-            if result.returncode == 0 and os.path.exists(output_file):
-                with open(output_file, 'rb') as thumb_file:
-                    self.thumbnail.save(
-                        f"thumbnail_{os.path.basename(input_file)}.jpg",
-                        File(thumb_file),
-                        save=False
-                    )
-                os.remove(output_file)
-            else:
-                print(f"FFmpeg error: {result.stderr}")
+            subprocess.run(command, check=True, capture_output=True)
 
+            # Save the thumbnail
+            if os.path.exists(output_file):
+                with open(output_file, "rb") as f:
+                    self.thumbnail.save(f"thumbnail_{self.pk}.jpg", File(f), save=False)
+                # Clean up
+                os.remove(output_file)
+
+        except subprocess.CalledProcessError as e:
+            print(f"Error generating thumbnail: {e.stderr.decode() if e.stderr else str(e)}")
         except Exception as e:
             print(f"Unexpected error generating thumbnail: {str(e)}")
 
