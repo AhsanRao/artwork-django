@@ -186,6 +186,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                     os.path.dirname(input_file),
                     f"thumbnail_{os.path.basename(input_file)}.jpg"
                 )
+                print(f"Generating thumbnail for {input_file} to {output_file}")
                 
                 try:
                     # Use ffmpeg to generate thumbnail
