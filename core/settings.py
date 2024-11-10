@@ -33,6 +33,13 @@ DEBUG = str2bool(os.environ.get('DEBUG'))
 DEBUG = False
 #print(' DEBUG -> ' + str(DEBUG) ) 
 
+# Maximum size of uploaded file
+DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200MB in bytes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200MB in bytes
+
+# Timeout settings
+TIMEOUT = 600
+
 # Docker HOST
 ALLOWED_HOSTS = ['*']
 
