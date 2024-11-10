@@ -11,6 +11,8 @@ import os
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from typing import Any
+import subprocess
+from pathlib import Path
 
 class User(AbstractUser):
     is_trainer = models.BooleanField(default=False)  # type: ignore
@@ -44,28 +46,37 @@ class Post(models.Model):
         if not self.video:
             return
 
-        input_file = self.video.path  # type: ignore
+        input_file = self.video.path
         output_file = os.path.join(
             os.path.dirname(input_file), f"thumbnail_{self.pk}.jpg"
         )
 
         try:
-            # Create a stream first
-            stream = ffmpeg.input(input_file, ss="00:00:01")
-            stream = ffmpeg.filter(stream, "scale", 480, -1)
-            stream = ffmpeg.output(stream, output_file, vframes=1)
+            # Create the ffmpeg stream
+            probe = ffmpeg.probe(input_file)
+            stream = (
+                ffmpeg
+                .input(input_file, ss=1)  # Take frame at 1 second
+                .filter('scale', 480, -1)
+                .output(output_file, vframes=1)
+                .overwrite_output()
+            )
             
             # Run the ffmpeg command
-            ffmpeg.run(stream, overwrite_output=True, capture_stdout=True, capture_stderr=True)
+            ffmpeg.run(stream, capture_stdout=True, capture_stderr=True)
 
             # Save the thumbnail
             with open(output_file, "rb") as f:
                 self.thumbnail.save(f"thumbnail_{self.pk}.jpg", File(f), save=False)
 
             # Clean up
-            os.remove(output_file)
-        except ffmpeg.Error as e:
-            print(f"Error generating thumbnail: {e.stderr.decode()}")
+            if os.path.exists(output_file):
+                os.remove(output_file)
+
+        except (ffmpeg.Error, subprocess.CalledProcessError) as e:
+            print(f"Error generating thumbnail: {str(e)}")
+        except Exception as e:
+            print(f"Unexpected error generating thumbnail: {str(e)}")
 
     def generate_qr_code(self):
         current_site = Site.objects.get_current()
