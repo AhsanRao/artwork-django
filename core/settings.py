@@ -30,7 +30,9 @@ if not SECRET_KEY:
 
 # Enable/Disable DEBUG Mode
 DEBUG = str2bool(os.environ.get('DEBUG'))
-DEBUG = False
+from decouple import config
+
+DEBUG = config('DEBUG', default=False, cast=bool)
 #print(' DEBUG -> ' + str(DEBUG) ) 
 
 # Maximum size of uploaded file
