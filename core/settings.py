@@ -43,10 +43,29 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200MB in bytes
 TIMEOUT = 600
 
 # Docker HOST
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '*', 
+    'fu2uregym.com', 
+    'www.fu2uregym.com', 
+    '3.121.13.73', 
+    'ec2-3-121-13-73.eu-central-1.compute.amazonaws.com'
+]
 
 # Add here your deployment HOSTS
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://localhost:5085', 'http://127.0.0.1:8000', 'http://127.0.0.1:5085']
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000', 
+    'http://localhost:5085', 
+    'http://127.0.0.1:8000', 
+    'http://127.0.0.1:5085', 
+    'http://fu2uregym.com', 
+    'http://www.fu2uregym.com', 
+    'https://fu2uregym.com', 
+    'https://www.fu2uregym.com',
+    'http://3.121.13.73',
+    'https://3.121.13.73',
+    'http://ec2-3-121-13-73.eu-central-1.compute.amazonaws.com',
+    'https://ec2-3-121-13-73.eu-central-1.compute.amazonaws.com'
+]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:    
