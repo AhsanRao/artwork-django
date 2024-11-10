@@ -52,29 +52,28 @@ class Post(models.Model):
         )
 
         try:
-            # Create the ffmpeg stream
-            probe = ffmpeg.probe(input_file)
-            stream = (
-                ffmpeg
-                .input(input_file, ss=1)  # Take frame at 1 second
-                .filter('scale', 480, -1)
-                .output(output_file, vframes=1)
-                .overwrite_output()
-            )
+            # Use subprocess directly to call ffmpeg
+            command = [
+                'ffmpeg',
+                '-i', input_file,    # Input file
+                '-ss', '00:00:01',   # Seek to 1 second
+                '-vframes', '1',     # Extract 1 frame
+                '-vf', 'scale=480:-1',  # Scale width to 480px, maintain aspect ratio
+                '-y',                # Overwrite output file
+                output_file
+            ]
             
-            # Run the ffmpeg command
-            ffmpeg.run(stream, capture_stdout=True, capture_stderr=True)
+            subprocess.run(command, check=True, capture_output=True)
 
             # Save the thumbnail
-            with open(output_file, "rb") as f:
-                self.thumbnail.save(f"thumbnail_{self.pk}.jpg", File(f), save=False)
-
-            # Clean up
             if os.path.exists(output_file):
+                with open(output_file, "rb") as f:
+                    self.thumbnail.save(f"thumbnail_{self.pk}.jpg", File(f), save=False)
+                # Clean up
                 os.remove(output_file)
 
-        except (ffmpeg.Error, subprocess.CalledProcessError) as e:
-            print(f"Error generating thumbnail: {str(e)}")
+        except subprocess.CalledProcessError as e:
+            print(f"Error generating thumbnail: {e.stderr.decode() if e.stderr else str(e)}")
         except Exception as e:
             print(f"Unexpected error generating thumbnail: {str(e)}")
 
