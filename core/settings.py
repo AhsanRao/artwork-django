@@ -51,6 +51,11 @@ ALLOWED_HOSTS = [
     'ec2-3-121-13-73.eu-central-1.compute.amazonaws.com'
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # Add here your deployment HOSTS
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000', 
